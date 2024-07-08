@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: Wishlist API
+  mvc:
+    problemdetails:
+      enabled: true
+  threads:
+    virtual:
+      enabled: true
