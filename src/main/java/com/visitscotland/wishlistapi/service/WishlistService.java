@@ -4,6 +4,7 @@ import com.visitscotland.wishlistapi.domain.Category;
 import com.visitscotland.wishlistapi.domain.Item;
 import com.visitscotland.wishlistapi.domain.User;
 import com.visitscotland.wishlistapi.domain.Wishlist;
+import com.visitscotland.wishlistapi.exception.ItemAlreadyExistsException;
 import com.visitscotland.wishlistapi.exception.ItemNotFoundException;
 import com.visitscotland.wishlistapi.exception.WishlistNotFoundException;
 import com.visitscotland.wishlistapi.exception.WishlistAlreadyExistsException;
@@ -27,8 +28,7 @@ import java.util.stream.Collectors;
 @Service
 @Validated
 public class WishlistService {
-    private static final String GET_WISHLIST_ENDPOINT = "http://localhost:8080.com/api/wishlists/%s";
-
+    private static final String GET_WISHLIST_BY_ID_ENDPOINT = "http://localhost:8080.com/api/wishlists/%s";
     private final WishlistRepository wishlistRepository;
 
     public WishlistService(WishlistRepository wishlistRepository) {
@@ -44,7 +44,7 @@ public class WishlistService {
 
         final User user = new User(userId);
         wishlistRepository.save(new Wishlist(user));
-        return URI.create(GET_WISHLIST_ENDPOINT.formatted(user.getId())); // TODO - Tidy this up.
+        return URI.create(GET_WISHLIST_BY_ID_ENDPOINT.formatted(user.getId()));
     }
 
     public Wishlist getWishlistByUserId(String userId) {
@@ -74,6 +74,10 @@ public class WishlistService {
         final Item item = MappingUtility
             .getItemMapper()
             .map(addItemRequest);
+
+        if(foundWishlist.itemExists(item)) {
+            throw new ItemAlreadyExistsException(item.getTitle());
+        }
 
         foundWishlist.addItem(item);
         wishlistRepository.save(foundWishlist);
