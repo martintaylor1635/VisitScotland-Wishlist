@@ -1,15 +1,14 @@
 package com.visitscotland.wishlistapi.domain;
 
-import java.util.UUID;
-
 public class User {
-    private final UUID id;
+    private final String id;
 
-    public UUID getId() {
-        return id;
+    public User(String id) {
+        this.id = id;
     }
 
-    public User(UUID id) {
-        this.id = id;
+    // Getters
+    public String getId() {
+        return id;
     }
 }
