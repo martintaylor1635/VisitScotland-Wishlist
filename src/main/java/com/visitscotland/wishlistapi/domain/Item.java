@@ -13,9 +13,12 @@ public class Item {
     private final Category category;
     private final URI image;
     private final ZonedDateTime eventDateTime;
-    private final Map<String, Object> metadata;
+    private final Map<String, String> metadata;
 
-    public Item(String id, String title, String description, Category category, URI image, ZonedDateTime eventDateTime, Map<String, Object> metadata) {
+    public Item(String id, String title,
+                String description, Category category,
+                URI image, ZonedDateTime eventDateTime,
+                Map<String, String> metadata) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -25,7 +28,6 @@ public class Item {
         this.metadata = metadata;
     }
 
-    // Getters
     public String getId() {
         return id;
     }
@@ -50,17 +52,20 @@ public class Item {
         return Optional.ofNullable(eventDateTime);
     }
 
-    // Equals and Hashcode
+    public Map<String, String> getMetadata() {
+        return metadata;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Item item = (Item) o;
-        return Objects.equals(id, item.id) && Objects.equals(title, item.title);
+        return Objects.equals(title, item.title);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title);
+        return Objects.hashCode(title);
     }
 }
