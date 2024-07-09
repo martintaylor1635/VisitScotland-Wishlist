@@ -8,6 +8,7 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.UUID;
 
 public final class MappingUtility {
@@ -26,6 +27,10 @@ public final class MappingUtility {
     }
 
     private static String formatDate(LocalDateTime dateTime) {
+        if(Objects.isNull(dateTime)) {
+            return null;
+        }
+
         return dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
     }
 

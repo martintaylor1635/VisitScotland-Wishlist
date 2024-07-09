@@ -4,10 +4,11 @@ import com.visitscotland.wishlistapi.domain.Category;
 import com.visitscotland.wishlistapi.domain.Item;
 import com.visitscotland.wishlistapi.domain.User;
 import com.visitscotland.wishlistapi.domain.Wishlist;
+import com.visitscotland.wishlistapi.exception.EventDateDisallowedException;
 import com.visitscotland.wishlistapi.exception.ItemAlreadyExistsException;
 import com.visitscotland.wishlistapi.exception.ItemNotFoundException;
-import com.visitscotland.wishlistapi.exception.WishlistNotFoundException;
 import com.visitscotland.wishlistapi.exception.WishlistAlreadyExistsException;
+import com.visitscotland.wishlistapi.exception.WishlistNotFoundException;
 import com.visitscotland.wishlistapi.repository.WishlistRepository;
 import com.visitscotland.wishlistapi.request.AddItemRequest;
 import com.visitscotland.wishlistapi.request.CreateWishlistRequest;
@@ -23,6 +24,7 @@ import org.springframework.validation.annotation.Validated;
 import java.net.URI;
 import java.util.Locale;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -71,12 +73,18 @@ public class WishlistService {
 
     public void addItemToWishlist(String userId, @Valid AddItemRequest addItemRequest) {
         final Wishlist foundWishlist = getWishlistByUserId(userId);
+        final Predicate<Item> isEventDateDisallowed = item -> !item.getCategory().equals(Category.EVENT)
+            && item.getEventDateTime().isPresent();
         final Item item = MappingUtility
             .getItemMapper()
             .map(addItemRequest);
 
         if(foundWishlist.itemExists(item)) {
             throw new ItemAlreadyExistsException(item.getTitle());
+        }
+
+        if(isEventDateDisallowed.test(item)) {
+            throw new EventDateDisallowedException();
         }
 
         foundWishlist.addItem(item);

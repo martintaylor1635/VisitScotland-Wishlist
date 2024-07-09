@@ -1,6 +1,7 @@
 package com.visitscotland.wishlistapi.exception.handler;
 
 import com.visitscotland.wishlistapi.exception.base.AlreadyExistsException;
+import com.visitscotland.wishlistapi.exception.base.DisallowedOperationException;
 import com.visitscotland.wishlistapi.exception.base.NotFoundException;
 
 import jakarta.validation.ConstraintViolation;
@@ -24,6 +25,12 @@ class ApiExceptionHandler {
 
         return ProblemDetail
             .forStatusAndDetail(HttpStatus.BAD_REQUEST, validationErrors);
+    }
+
+    @ExceptionHandler(DisallowedOperationException.class)
+    private ProblemDetail validationExceptionHandler(DisallowedOperationException exception) {
+        return ProblemDetail
+            .forStatusAndDetail(HttpStatus.BAD_REQUEST, exception.getMessage());
     }
 
     @ExceptionHandler(NotFoundException.class)
