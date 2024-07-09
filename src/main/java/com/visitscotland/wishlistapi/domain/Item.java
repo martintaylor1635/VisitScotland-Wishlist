@@ -1,7 +1,6 @@
 package com.visitscotland.wishlistapi.domain;
 
 import java.net.URI;
-import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -12,12 +11,12 @@ public class Item {
     private final String description;
     private final Category category;
     private final URI image;
-    private final ZonedDateTime eventDateTime;
+    private final String eventDateTime;
     private final Map<String, String> metadata;
 
     public Item(String id, String title,
                 String description, Category category,
-                URI image, ZonedDateTime eventDateTime,
+                URI image, String eventDateTime,
                 Map<String, String> metadata) {
         this.id = id;
         this.title = title;
@@ -48,7 +47,7 @@ public class Item {
         return image;
     }
 
-    public Optional<ZonedDateTime> getEventDateTime() {
+    public Optional<String> getEventDateTime() {
         return Optional.ofNullable(eventDateTime);
     }
 
