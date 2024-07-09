@@ -5,6 +5,8 @@ import com.visitscotland.wishlistapi.domain.Item;
 import com.visitscotland.wishlistapi.request.AddItemRequest;
 
 import java.net.URI;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -16,10 +18,22 @@ public final class MappingUtility {
             UUID.randomUUID().toString(),
             request.title(),
             request.description(),
-            Category.valueOf(request.category().toUpperCase(Locale.ROOT)),
-            URI.create(request.image()),
-            request.eventDateTime(),
+            parseCategory(request.category()),
+            parseUri(request.image()),
+            formatDate(request.eventDateTime()),
             request.metadata()
         );
+    }
+
+    private static String formatDate(LocalDateTime dateTime) {
+        return dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+    }
+
+    private static URI parseUri(String uri) {
+        return URI.create(uri);
+    }
+
+    private static Category parseCategory(String category) {
+        return Category.valueOf(category.toUpperCase(Locale.ROOT));
     }
 }
