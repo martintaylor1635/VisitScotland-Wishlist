@@ -7,7 +7,6 @@ public class User {
         this.id = id;
     }
 
-    // Getters
     public String getId() {
         return id;
     }
