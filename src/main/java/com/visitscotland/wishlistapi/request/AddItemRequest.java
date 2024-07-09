@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.URL;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 
@@ -15,6 +15,6 @@ public record AddItemRequest(
     @NotBlank String description,
     @ValidCategory String category,
     @NotBlank @URL String image,
-    @NotNull @FutureOrPresent ZonedDateTime eventDateTime,
+    @NotNull @FutureOrPresent LocalDateTime eventDateTime,
     Map<String, String> metadata
 ) { }
