@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Service
 @Validated
 public class WishlistService {
-    private static final String GET_WISHLIST_BY_ID_ENDPOINT = "http://localhost:8080.com/api/wishlists/%s";
+    private static final String GET_WISHLIST_BY_ID_ENDPOINT = "http://localhost:8080/api/wishlist/%s";
     private final WishlistRepository wishlistRepository;
 
     public WishlistService(WishlistRepository wishlistRepository) {
@@ -53,15 +53,15 @@ public class WishlistService {
     }
 
     public FilteredWishlistResponse getWishlistAndFilterItemsByCategory(String userId, @ValidCategory String category) {
-        final Wishlist wishlist = getWishlistByUserId(userId);
+        final Wishlist foundWishlist = getWishlistByUserId(userId);
         final Category requiredCategory = Category.valueOf(category.toUpperCase(Locale.ROOT));
-        final Set<Item> filteredItems = wishlist
+        final Set<Item> filteredItems = foundWishlist
             .getItems()
             .stream()
             .filter(item -> item.getCategory().equals(requiredCategory))
             .collect(Collectors.toSet());
 
-        return new FilteredWishlistResponse(wishlist.getUser(), filteredItems);
+        return new FilteredWishlistResponse(foundWishlist.getUser(), filteredItems);
     }
 
     public void deleteWishlistByUserId(String userId) {
@@ -84,13 +84,13 @@ public class WishlistService {
     }
 
     public void deleteItemFromWishlist(String userId, String itemId) {
-        final Wishlist wishlist = getWishlistByUserId(userId);
-        final boolean isRemoved = wishlist.removeItemByItemId(itemId);
+        final Wishlist foundWishlist = getWishlistByUserId(userId);
+        final boolean isRemoved = foundWishlist.removeItemByItemId(itemId);
 
         if(!isRemoved) {
             throw new ItemNotFoundException(itemId);
         }
 
-        wishlistRepository.save(wishlist);
+        wishlistRepository.save(foundWishlist);
     }
 }
